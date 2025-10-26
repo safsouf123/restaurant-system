@@ -1,4 +1,4 @@
 function Dishdetail (){
-    return <h1>About</h1>
+    return <h1>dish details</h1>
 }
 export default Dishdetail;

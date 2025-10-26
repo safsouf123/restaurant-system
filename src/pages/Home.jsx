@@ -1,4 +1,11 @@
 function Home(){
-    return <h1>home page</h1>
+return (
+   <main className="min-h-screen bg-pink-200"></main>
+)
+    
+    
+    
+  
+    
 }
 export default Home;
