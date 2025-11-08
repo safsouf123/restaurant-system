@@ -10,6 +10,7 @@ import Dishdetail from "../pages/Dishdetail";
 import Navbar from "./Navbar";
 import Cart from "../pages/Cart";
 import Menu from "../pages/Menu";
+import Orders from "../pages/Orders";
 function Main (){
     return(
     <>
@@ -19,7 +20,8 @@ function Main (){
         <Route path="/about" element={<About />}/>
           <Route path="/Menu" element={<Menu/>}/>
           <Route path="/menu/ :id" element={<Dishdetail/>}></Route>
-<Route path="cart"        element={<Cart/>}/>
+<Route path="/cart"        element={<Cart/>}/>
+<Route path="/orders"      Component={Orders}/>
        
     
 

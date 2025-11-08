@@ -1,4 +1,4 @@
 function Dishdetail (){
-    return <h1>dish details</h1>
+   <main className="min-h-screen bg-pink-200"></main>
 }
 export default Dishdetail;

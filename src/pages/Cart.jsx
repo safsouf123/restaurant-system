@@ -1,7 +1,7 @@
 function Cart(){
     return (
     <>
-    <h1>cart</h1>
+      <main className="min-h-screen bg-pink-200"></main>
     </>
     )
     

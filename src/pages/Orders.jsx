@@ -1,4 +1,6 @@
 function Orders (){
-    return <h1>Orders</h1>
+    return (
+           <main className="min-h-screen bg-pink-200"></main>
+    )
 }
 export default Orders;
