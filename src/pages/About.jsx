@@ -2,18 +2,18 @@ function About() {
 return (
 <main className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/60 to-amber-50/50 flex items-stretch justify-center px-4 sm:px-6 lg:px-8 py-10">
 <div className="relative w-full max-w-5xl mx-auto">
-{/* background blobs */}
+
 <div className="pointer-events-none absolute -top-24 -left-24 w-64 h-64 bg-pink-200/50 rounded-full blur-3xl opacity-70" />
 <div className="pointer-events-none absolute -bottom-32 -right-10 w-72 h-72 bg-amber-200/60 rounded-full blur-3xl opacity-70" />
 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.7),_transparent_65%)]" />
 
-{/* content card */}
+
 <section className="relative bg-white/80 backdrop-blur-md border border-pink-100 rounded-3xl shadow-xl shadow-pink-100/60 overflow-hidden">
-{/* top strip */}
+
 <div className="h-2 w-full bg-gradient-to-r from-pink-400 via-amber-300 to-rose-400" />
 
 <div className="p-6 sm:p-10 lg:p-12">
-{/* heading */}
+
 <header className="mb-6 sm:mb-8">
 <p className="text-[0.75rem] font-semibold tracking-[0.3em] uppercase text-pink-400 mb-2">
 Our Story
@@ -24,9 +24,9 @@ Baked from the heart,
 </h1>
 </header>
 
-{/* main content */}
+
 <div className="grid gap-8 md:grid-cols-[1.6fr_1.2fr] items-start">
-{/* left: story */}
+
 <div className="space-y-4 text-sm sm:text-base text-pink-900/90 leading-relaxed">
 <p>
 At <span className="font-semibold text-pink-600">BAKE-ERA</span>, every loaf,
@@ -58,7 +58,7 @@ mind.
 </p>
 </div>
 
-{/* right: highlights */}
+
 <aside className="space-y-4 md:space-y-5">
 <div className="rounded-2xl bg-pink-50/80 border border-pink-100 p-4 sm:p-5 shadow-sm shadow-pink-100/70 transition-transform duration-300 hover:-translate-y-1 hover:shadow-md">
 <h2 className="text-sm font-semibold tracking-[0.2em] uppercase text-pink-500 mb-2">
