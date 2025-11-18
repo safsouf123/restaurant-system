@@ -95,6 +95,11 @@ image:
 function Menu (){
 const [mealfilter , setmealfilter] = useState("all");
 const [tempfilter , settempfilter] = useState("all");
+const filtereditems = menuitems.filter((item) => {
+const matchesmeal = mealfilter === "all" ? true : item.meal === mealfilter;
+const matchestemp = tempfilter === "all" ? true : item.temperature === tempfilter;
+return matchesmeal && matchestemp;
+});
     return (
 <main className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/60 to-amber-50/50 px-4 sm:px-6 lg:px-8 py-8">
 <div className="relative max-w-6xl mx-auto">
@@ -118,9 +123,104 @@ Choose from cozy breakfast bites, comforting drinks, and handcrafted
 desserts. We’ll add the actual items in the next steps.
 </p>
 </header>
+<div className="mb-6 space-y-3">
+    <div>
+        <p className="text-[0.7rem] uppercase tracking-[0.2em] text-pink-400 mb-1">
+            meal type
+            </p>
+            <button
+onClick={() => setmealfilter("all")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+mealfilter === "all"
+? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-200"
+: "bg-white/80 text-pink-700 border-pink-100 hover:bg-pink-50"
+}`}
+>
+All
+</button>
+<button
+onClick={() => setmealfilter("breakfast")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+mealfilter === "breakfast"
+? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-200"
+: "bg-white/80 text-pink-700 border-pink-100 hover:bg-pink-50"
+}`}
+>
+Breakfast
+</button>
+<button
+onClick={() => setmealfilter("savory")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+mealfilter === "savory"
+? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-200"
+: "bg-white/80 text-pink-700 border-pink-100 hover:bg-pink-50"
+}`}
+>
+Savory
+</button>
+<button
+onClick={() => setmealfilter("dessert")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+mealfilter === "dessert"
+? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-200"
+: "bg-white/80 text-pink-700 border-pink-100 hover:bg-pink-50"
+}`}
+>
+Dessert
+</button>
+<button
+onClick={() => setmealfilter("drinks")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+mealfilter === "drinks"
+? "bg-pink-500 text-white border-pink-500 shadow-md shadow-pink-200"
+: "bg-white/80 text-pink-700 border-pink-100 hover:bg-pink-50"
+}`}
+>
+Drinks
+</button>
+    </div>
+    </div>
+
+    <div>
+<p className="text-[0.7rem] uppercase tracking-[0.2em] text-pink-400 mb-1">
+Temperature
+</p>
+<div className="flex flex-wrap gap-2">
+<button
+onClick={() => settempfilter("all")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+tempfilter === "all"
+? "bg-amber-400 text-amber-900 border-amber-400 shadow-md shadow-amber-200"
+: "bg-white/80 text-amber-800 border-amber-100 hover:bg-amber-50"
+}`}
+>
+All
+</button>
+<button
+onClick={() => settempfilter("hot")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+tempfilter === "hot"
+? "bg-amber-400 text-amber-900 border-amber-400 shadow-md shadow-amber-200"
+: "bg-white/80 text-amber-800 border-amber-100 hover:bg-amber-50"
+}`}
+>
+Hot
+</button>
+<button
+onClick={() => settempfilter("cold")}
+className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
+tempfilter === "cold"
+? "bg-amber-400 text-amber-900 border-amber-400 shadow-md shadow-amber-200"
+: "bg-white/80 text-amber-800 border-amber-100 hover:bg-amber-50"
+}`}
+>
+Cold
+</button>
+</div>
+</div>
 
 <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:-grid-cols-3">
-    {menuitems.map((item) =>(
+    {filtereditems.map((item) =>(
         <article
         key={item.id}
 className="group relative bg-pink-50/70 border border-pink-100 rounded-2xl shadow-sm shadow-pink-100/60 hover:shadow-md hover:shadow-pink-100/90 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
