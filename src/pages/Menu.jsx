@@ -1,5 +1,5 @@
 import {useState} from "react";
-
+import { Link } from "react-router-dom";
 
 
 const menuitems = [
@@ -92,7 +92,7 @@ image:
 
 
 
-function Menu (){
+function Menu ({onAddtocart}){
 const [mealfilter , setmealfilter] = useState("all");
 const [tempfilter , settempfilter] = useState("all");
 const filtereditems = menuitems.filter((item) => {
@@ -221,6 +221,10 @@ Cold
 
 <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:-grid-cols-3">
     {filtereditems.map((item) =>(
+        <Link to={`/menu/${item.id}`}
+        key={item.id}
+        className="block"
+        >
         <article
         key={item.id}
 className="group relative bg-pink-50/70 border border-pink-100 rounded-2xl shadow-sm shadow-pink-100/60 hover:shadow-md hover:shadow-pink-100/90 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
@@ -261,11 +265,15 @@ ${item.price.toFixed(2)}
 </span>
 </div>
 
-<button className="mt-4 w-full rounded-full bg-pink-500 text-white text-xs sm:text-sm font-semibold py-2 shadow-md shadow-pink-200 hover:bg-pink-600 active:scale-95 transition-all duration-200">
+<button onClick={(e)=>{e.preventDefault();
+    onAddtocart(item);
+}}
+className="mt-4 w-full rounded-full bg-pink-500 text-white text-xs sm:text-sm font-semibold py-2 shadow-md shadow-pink-200 hover:bg-pink-600 active:scale-95 transition-all duration-200">
 Add to plate
 </button>
 </div>
 </article>
+</Link>
     )
 )}
     </div>
