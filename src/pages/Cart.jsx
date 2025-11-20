@@ -10,7 +10,7 @@ function Cart({cartitems}){
 Your Cart
 </h1>
 <span className="text-sm sm:text-base text-pink-600">
-{cartitems.length} item{cartitems.length !== 1 ? "s" : ""}
+{cartitems.length} item{cartitems.length !== 1 ? "s" : "" }
 </span>
 </header>
 {cartitems.length === 0 ? (
