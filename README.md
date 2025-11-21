@@ -149,10 +149,7 @@ Contributions are welcome! Please fork the repo and create a pull request.
 
 
 
-License
 
-
-This project is open-source under the MIT License.
 
 
 
