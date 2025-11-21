@@ -11,7 +11,9 @@ return (
 
 <div className="flex items-center gap-3">
 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-pink-500 to-amber-400 shadow-lg shadow-pink-300/60">
+<Link to="/">
 <AutoFixHighOutlinedIcon className="text-white" fontSize="small" />
+</Link>
 </div>
 <div className="flex flex-col leading-tight">
 <span className="text-xl font-bold tracking-[0.3em] uppercase text-pink-700">

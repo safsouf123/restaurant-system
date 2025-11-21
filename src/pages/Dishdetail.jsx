@@ -85,7 +85,7 @@ function Dishdetail({onAddtocart}) {
 const { id } = useParams();
 const navigate = useNavigate();
 
-const itemId = Number(id); // URL gives you a string, convert to number
+const itemId = Number(id); 
 const item = menuitems.find((dish) => dish.id === itemId);
 
 

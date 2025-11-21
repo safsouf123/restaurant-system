@@ -53,7 +53,8 @@ single day. Take a seat, breathe in the aroma, and treat yourself.
 <Link to="/menu"> View Today&apos;s Menu </Link>
 </button>
 <button className="px-5 py-2 rounded-full bg-white/80 text-pink-600 text-sm font-semibold tracking-wide border border-pink-200 hover:bg-pink-50 hover:border-pink-300 active:scale-95 transition-all duration-200">
-Order for Pickup
+
+<Link to="/orders"> Order for pickup </Link>
 </button>
 </div>
 </section>

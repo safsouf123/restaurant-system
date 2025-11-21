@@ -1,6 +1,14 @@
-function Cart({cartitems}){
+function Cart({cartitems ,  setcartitems}){
   const total = cartitems.reduce((sum,item) =>sum+ item.price ,0
 );
+function removeitem(indextoremove){
+  setcartitems(previtems => previtems.filter((item,index)=>index!== indextoremove));
+}
+
+  
+
+
+
     return (
    <main className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/60 to-amber-50/50 px-4 sm:px-6 lg:px-8 py-8">
 <div className="max-w-4xl mx-auto">
@@ -35,8 +43,14 @@ className="py-3 flex items-center justify-between gap-4"
 </div>
 <span className="text-sm sm:text-base font-bold text-pink-600">
 ${item.price.toFixed(2)}
+<div>
+  <button onClick={() => {removeitem(index)}}>
+Remove 
+  </button>
+</div>
 </span>
 </li>
+
 ))}
 </ul>
 
@@ -48,6 +62,7 @@ Total
 ${total.toFixed(2)}
 </p>
 </div>
+
   </>
 )}
 </section>
