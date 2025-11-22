@@ -23,7 +23,7 @@ function Main (){
     <Routes>
          <Route path="/" element={<Home />}></Route>
         <Route path="/about" element={<About />}/>
-          <Route path="/menu" element={<Menu onAddtocart={handleaddtocart}/>}/>
+          <Route path="/menu" element={<Menu onAddtocart={handleaddtocart} cartitems={cartitems}/>}/>
    <Route path="/menu/:id" element= {<Dishdetail onAddtocart={handleaddtocart}/>}></Route>
 <Route path="/cart"        element={<Cart cartitems={cartitems} setcartitems={setcartitems}/>}/>
 <Route path="/orders"      Component={Orders}/>

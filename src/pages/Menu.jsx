@@ -1,6 +1,7 @@
 import {useState} from "react";
 import { Link } from "react-router-dom";
-
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FloatingCart from "./Floatingcart";
 
 const menuitems = [
 {
@@ -92,7 +93,7 @@ image:
 
 
 
-function Menu ({onAddtocart}){
+function Menu ({onAddtocart , cartitems}){
 const [mealfilter , setmealfilter] = useState("all");
 const [tempfilter , settempfilter] = useState("all");
 const filtereditems = menuitems.filter((item) => {
@@ -100,7 +101,9 @@ const matchesmeal = mealfilter === "all" ? true : item.meal === mealfilter;
 const matchestemp = tempfilter === "all" ? true : item.temperature === tempfilter;
 return matchesmeal && matchestemp;
 });
+const [addeditem, setaddeditem] = useState(null);
     return (
+        <>
 <main className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/60 to-amber-50/50 px-4 sm:px-6 lg:px-8 py-8">
 <div className="relative max-w-6xl mx-auto">
 
@@ -264,13 +267,18 @@ ${item.price.toFixed(2)}
 {item.temperature}
 </span>
 </div>
-
+<div className="relative">
 <button onClick={(e)=>{e.preventDefault();
     onAddtocart(item);
+    setaddeditem(item.id);setTimeout(()=> setaddeditem(null),2000);
 }}
 className="mt-4 w-full rounded-full bg-pink-500 text-white text-xs sm:text-sm font-semibold py-2 shadow-md shadow-pink-200 hover:bg-pink-600 active:scale-95 transition-all duration-200">
 Add to plate
 </button>
+{addeditem === item.id && (
+    <span className="absolute top-0 right-0 transform -translate-y-full bg-amber-400 text-pink-700 px-2 py-1 rounded-full text-xs font-semibold shadow-md">added to cart!</span>
+)}
+</div>
 </div>
 </article>
 </Link>
@@ -281,6 +289,9 @@ Add to plate
 </section>
 </div>
 </main>
+<FloatingCart cartitems={cartitems}></FloatingCart>
+</>
+
     );
 }
 export default Menu;
