@@ -17,19 +17,23 @@ db.connect(err => {
   if (err) return console.error(err);
   console.log('Database connected successfully');
 });
-
+ 
+app.get("/" , (req, res)=> res.send("ok"));
 app.post('/api/auth/signup', (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   if (!name || !email || !password) return res.status(400).json({ message: 'All fields required' });
 
   db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
     if (err) return res.status(500).json(err);
     if (results.length > 0) return res.status(400).json({ message: 'User already exists' });
 
-    db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password], (err, result) => {
-      if (err) return res.status(500).json(err);
-      res.status(201).json({ message: 'User created successfully', userId: result.insertId });
-    });
+    const userRole = role || 'user';
+    db.query('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', 
+      [name, email, password, userRole], 
+      (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.status(201).json({ message: 'User created successfully', userId: result.insertId, role: userRole });
+      });
   });
 });
 
@@ -41,11 +45,31 @@ app.post('/api/auth/login', (req, res) => {
     if (err) return res.status(500).json(err);
     if (results.length === 0) return res.status(400).json({ message: 'Invalid email or password' });
 
-    res.json({ message: 'Login successful' });
+    const user = results[0];
+    res.json({ 
+      message: 'Login successful', 
+      userId: user.id, 
+      role: user.role,
+      name: user.name
+    });
   });
 });
+function isAdmin(req, res, next) {
+  const userId = req.query.userId;
+  if (!userId) return res.status(401).json({ message: 'User ID required' });
 
-app.get('/api/orders', (req, res) => {
+  db.query('SELECT role FROM users WHERE id = ?', [userId], (err, results) => {
+    if (err) return res.status(500).json(err);
+    if (results.length === 0 || results[0].role !== 'admin') {
+      return res.status(403).json({ message: 'Access denied. Admins only.' });
+    }
+    next();
+  });
+}
+
+
+
+app.get('/api/admin/orders',isAdmin ,(req, res) => {
   db.query('SELECT * FROM orders', (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
@@ -76,6 +100,29 @@ app.delete('/api/orders/:id', (req, res) => {
     res.json({ message: 'Order deleted' });
   });
 });
+app.get('/api/menu', (req, res) => {
+db.query('SELECT * FROM menu', (err, results) => {
+if (err) return res.status(500).json(err);
+res.json(results);
+});
+});
 
-const PORT = 4000;
+app.get('/api/menu/:id', (req, res) => {
+db.query('SELECT * FROM menu WHERE id = ?', [req.params.id], (err, results) => {
+if (err) return res.status(500).json(err);
+if (results.length === 0) return res.status(404).json({ message: 'Item not found' });
+res.json(results[0]);
+});
+});
+app.get("/api/orders", (req, res) => {
+const userId = req.query.userId;
+if(!userId) return res.status(400).json({message:"userid is required"});
+db.query("SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC", [userId], (err, results) => {
+if (err) return res.status(500).json(err);
+res.json(results);
+});
+});
+
+
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

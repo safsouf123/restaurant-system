@@ -14,6 +14,7 @@ import Orders from "../pages/Orders";
 import Contact from "../pages/Contact";
 function Main (){
     const [cartitems , setcartitems] = useState([]);
+    const [user , setUser] = useState({id : 1 , name :"test", role:"user"});
     function handleaddtocart(item){
         setcartitems((previtems) => [...previtems,item]);
     }
@@ -25,9 +26,9 @@ function Main (){
         <Route path="/about" element={<About />}/>
           <Route path="/menu" element={<Menu onAddtocart={handleaddtocart} cartitems={cartitems}/>}/>
    <Route path="/menu/:id" element= {<Dishdetail onAddtocart={handleaddtocart}/>}></Route>
-<Route path="/cart"        element={<Cart cartitems={cartitems} setcartitems={setcartitems}/>}/>
-<Route path="/orders"      Component={Orders}/>
-<Route path="/contact" Component={Contact}/>
+<Route path="/cart"        element={<Cart cartitems={cartitems} setcartitems={setcartitems} user={user}/>}/>
+<Route path="/orders"      element={<Orders user={user}/>}/>
+<Route path="/contact" element={<Contact/>} />
        
     
 

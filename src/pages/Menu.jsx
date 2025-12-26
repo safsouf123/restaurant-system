@@ -2,101 +2,22 @@ import {useState} from "react";
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FloatingCart from "./Floatingcart";
-
-const menuitems = [
-{
-id: 1,
-name: "Butter Croissant",
-description: "Flaky, buttery layers baked fresh every morning.",
-price: 3.5,
-meal: "breakfast",
-temperature: "hot",
-tag: "Morning favorite",
-image:
-"https://images.pexels.com/photos/8105045/pexels-photo-8105045.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-
-{
-id: 2,
-name: "Cinnamon Roll Swirl",
-description: "Soft roll with cinnamon sugar and vanilla glaze.",
-price: 4.0,
-meal: "breakfast",
-temperature: "hot",
-tag: "Best seller",
-image:
-"https://images.pexels.com/photos/4047217/pexels-photo-4047217.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-
-{
-id: 3,
-name: "Berry Tart",
-description: "Buttery crust filled with cream and fresh berries.",
-price: 5.25,
-meal: "dessert",
-temperature: "cold",
-tag: "Seasonal",
-image:
-"https://images.pexels.com/photos/13279208/pexels-photo-13279208.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-
-{
-id: 4,
-name: "Sourdough Sandwich",
-description: "Toasted sourdough with cheese, tomato, and herbs.",
-price: 7.5,
-meal: "savory",
-temperature: "hot",
-tag: "Hearty bite",
-image:
-"https://images.pexels.com/photos/1647163/pexels-photo-1647163.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-
-{
-id: 5,
-name: "Garden Quiche Slice",
-description: "Egg custard with spinach, feta, and roasted peppers.",
-price: 6,
-meal: "savory",
-temperature: "hot",
-tag: "From the oven",
-image:
-"https://images.pexels.com/photos/5419305/pexels-photo-5419305.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-
-{
-id: 6,
-name: "Classic Hot Chocolate",
-description: "Rich cocoa topped with whipped cream.",
-price: 3.75,
-meal: "drinks",
-temperature: "hot",
-tag: "Cozy choice",
-image:
-"https://images.pexels.com/photos/14704654/pexels-photo-14704654.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-
-{
-id: 7,
-name: "Iced Vanilla Latte",
-description: "Chilled espresso, milk, and a touch of vanilla.",
-price: 4.75,
-meal: "drinks",
-temperature: "cold",
-tag: "Cool & refreshing",
-image:
-"https://images.pexels.com/photos/29070514/pexels-photo-29070514.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-},
-];
-
-
-
-
+import { useEffect } from "react";
 
 function Menu ({onAddtocart , cartitems}){
+    const [items, setItems] = useState([]);
+
+useEffect(() => {
+fetch("http://localhost:5000/api/menu")
+.then((res) => res.json())
+.then((data) => setItems(data))
+.catch((err) => console.log(err));
+}, []);
+
+
 const [mealfilter , setmealfilter] = useState("all");
 const [tempfilter , settempfilter] = useState("all");
-const filtereditems = menuitems.filter((item) => {
+const filtereditems = items.filter((item) => {
 const matchesmeal = mealfilter === "all" ? true : item.meal === mealfilter;
 const matchestemp = tempfilter === "all" ? true : item.temperature === tempfilter;
 return matchesmeal && matchestemp;
@@ -251,7 +172,7 @@ className="h-full w-full object-cover transform transition-transform duration-50
 {item.name}
 </h2>
 <span className="text-sm sm:text-base font-bold text-pink-600">
-${item.price.toFixed(2)}
+${Number(item.price).toFixed(2)}
 </span>
 </div>
 

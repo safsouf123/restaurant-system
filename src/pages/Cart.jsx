@@ -1,4 +1,4 @@
-function Cart({cartitems ,  setcartitems}){
+function Cart({cartitems ,  setcartitems , user}){
   const total = cartitems.reduce((sum,item) =>sum+ item.price ,0
 );
 function removeitem(indextoremove){
@@ -39,11 +39,41 @@ className="py-3 flex items-center justify-between gap-4"
 </p>
 <p className="text-xs sm:text-sm text-pink-700/80">
 {item.meal} · {item.temperature}
-</p>
+</p> 
 </div>
 <span className="text-sm sm:text-base font-bold text-pink-600">
-${item.price.toFixed(2)}
+${Number(item.price).toFixed(2)}
 <div>
+  <button
+onClick={async () => {
+const userId = localStorage.getItem("userId"); // you must store this after login
+if (!userId) {
+alert("Please login first");
+const userId = user.id;
+return;
+}
+
+for (const item of cartitems) {
+await fetch("http://localhost:4000/api/orders", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+user_id: userId,
+item_name: item.name,
+quantity: 1,
+price: item.price
+})
+});
+}
+
+setcartitems([]);
+alert("Order placed ✅");
+}}
+className="mt-4 w-full rounded-full bg-amber-400 text-amber-900 text-sm font-semibold py-2 shadow-md shadow-amber-200 hover:bg-amber-500 active:scale-95 transition-all duration-200"
+>
+Checkout
+</button>
+
   <button onClick={() => {removeitem(index)}}>
 Remove 
   </button>
@@ -59,7 +89,7 @@ Remove
 Total
 </p>
 <p className="text-lg sm:text-xl font-extrabold text-pink-700">
-${total.toFixed(2)}
+${Number(total).toFixed(2)}
 </p>
 </div>
 
