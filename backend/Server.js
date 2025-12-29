@@ -66,7 +66,12 @@ function isAdmin(req, res, next) {
     next();
   });
 }
-
+app.get("/api/admin/users", isAdmin, (req, res) => {
+db.query("SELECT id, name, email, role FROM users", (err, results) => {
+if (err) return res.status(500).json(err);
+res.json(results);
+});
+});
 
 
 app.get('/api/admin/orders',isAdmin ,(req, res) => {

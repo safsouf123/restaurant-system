@@ -1,39 +1,50 @@
-import {useState} from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FloatingCart from "./Floatingcart";
-import { useEffect } from "react";
 
-function Menu ({onAddtocart , cartitems}){
-    const [items, setItems] = useState([]);
+function Menu({ onAddtocart, cartitems }) {
+const [items, setItems] = useState([]); // MUST be array
+const [mealfilter, setmealfilter] = useState("all");
+const [tempfilter, settempfilter] = useState("all");
+const [addeditem, setaddeditem] = useState(null);
+const [msg, setMsg] = useState("");
 
 useEffect(() => {
 fetch("http://localhost:5000/api/menu")
 .then((res) => res.json())
-.then((data) => setItems(data))
-.catch((err) => console.log(err));
+.then((data) => {
+// If backend returns something unexpected, avoid crashing
+if (Array.isArray(data)) {
+setItems(data);
+} else {
+setItems([]);
+setMsg("Menu data is not available right now.");
+}
+})
+.catch((err) => {
+console.log(err);
+setItems([]);
+setMsg("Could not load menu.");
+});
 }, []);
 
-
-const [mealfilter , setmealfilter] = useState("all");
-const [tempfilter , settempfilter] = useState("all");
-const filtereditems = items.filter((item) => {
-const matchesmeal = mealfilter === "all" ? true : item.meal === mealfilter;
-const matchestemp = tempfilter === "all" ? true : item.temperature === tempfilter;
+const filtereditems = (Array.isArray(items) ? items : []).filter((item) => {
+const matchesmeal =
+mealfilter === "all" ? true : item.meal === mealfilter;
+const matchestemp =
+tempfilter === "all" ? true : item.temperature === tempfilter;
 return matchesmeal && matchestemp;
 });
-const [addeditem, setaddeditem] = useState(null);
-    return (
-        <>
+
+return (
+<>
 <main className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/60 to-amber-50/50 px-4 sm:px-6 lg:px-8 py-8">
 <div className="relative max-w-6xl mx-auto">
-
 <div className="pointer-events-none absolute -top-24 -left-24 w-64 h-64 bg-pink-200/50 rounded-full blur-3xl opacity-70" />
 <div className="pointer-events-none absolute -bottom-32 -right-10 w-72 h-72 bg-amber-200/60 rounded-full blur-3xl opacity-70" />
 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.7),_transparent_65%)]" />
 
 <section className="relative bg-white/80 backdrop-blur-md border border-pink-100 rounded-3xl shadow-xl shadow-pink-100/60 p-6 sm:p-8 lg:p-10">
-
 <header className="mb-6 sm:mb-8">
 <p className="text-[0.75rem] font-semibold tracking-[0.3em] uppercase text-pink-400 mb-2">
 Our Menu
@@ -43,16 +54,25 @@ Something sweet, something warm,
 <span className="block text-pink-500">something just for you.</span>
 </h1>
 <p className="mt-3 text-sm sm:text-base text-pink-900/80 max-w-xl">
-Choose from cozy breakfast bites, comforting drinks, and handcrafted
-desserts. We’ll add the actual items in the next steps.
+Choose from cozy breakfast bites, comforting drinks, and handcrafted desserts.
 </p>
 </header>
+
+{msg && (
+<div className="mb-4 p-3 rounded-2xl bg-amber-100 text-amber-900 text-sm border border-amber-200">
+{msg}
+</div>
+)}
+
+{/* Meal Filter */}
 <div className="mb-6 space-y-3">
-    <div>
-        <p className="text-[0.7rem] uppercase tracking-[0.2em] text-pink-400 mb-1">
-            meal type
-            </p>
-            <button
+<div>
+<p className="text-[0.7rem] uppercase tracking-[0.2em] text-pink-400 mb-1">
+meal type
+</p>
+
+<div className="flex flex-wrap gap-2">
+<button
 onClick={() => setmealfilter("all")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
 mealfilter === "all"
@@ -62,6 +82,7 @@ mealfilter === "all"
 >
 All
 </button>
+
 <button
 onClick={() => setmealfilter("breakfast")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
@@ -72,6 +93,7 @@ mealfilter === "breakfast"
 >
 Breakfast
 </button>
+
 <button
 onClick={() => setmealfilter("savory")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
@@ -82,6 +104,7 @@ mealfilter === "savory"
 >
 Savory
 </button>
+
 <button
 onClick={() => setmealfilter("dessert")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
@@ -92,6 +115,7 @@ mealfilter === "dessert"
 >
 Dessert
 </button>
+
 <button
 onClick={() => setmealfilter("drinks")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
@@ -102,13 +126,15 @@ mealfilter === "drinks"
 >
 Drinks
 </button>
-    </div>
-    </div>
+</div>
+</div>
 
-    <div>
+{/* Temp Filter */}
+<div>
 <p className="text-[0.7rem] uppercase tracking-[0.2em] text-pink-400 mb-1">
 Temperature
 </p>
+
 <div className="flex flex-wrap gap-2">
 <button
 onClick={() => settempfilter("all")}
@@ -120,6 +146,7 @@ tempfilter === "all"
 >
 All
 </button>
+
 <button
 onClick={() => settempfilter("hot")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
@@ -130,6 +157,7 @@ tempfilter === "hot"
 >
 Hot
 </button>
+
 <button
 onClick={() => settempfilter("cold")}
 className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide border transition-all duration-200 ${
@@ -142,16 +170,18 @@ Cold
 </button>
 </div>
 </div>
+</div>
 
-<div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:-grid-cols-3">
-    {filtereditems.map((item) =>(
-        <Link to={`/menu/${item.id}`}
-        key={item.id}
-        className="block"
-        >
-        <article
-        key={item.id}
-className="group relative bg-pink-50/70 border border-pink-100 rounded-2xl shadow-sm shadow-pink-100/60 hover:shadow-md hover:shadow-pink-100/90 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+{/* Items Grid */}
+{filtereditems.length === 0 ? (
+<p className="text-pink-700">
+No items match your filters right now.
+</p>
+) : (
+<div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+{filtereditems.map((item) => (
+<Link to={`/menu/${item.id}`} key={item.id} className="block">
+<article className="group relative bg-pink-50/70 border border-pink-100 rounded-2xl shadow-sm shadow-pink-100/60 hover:shadow-md hover:shadow-pink-100/90 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
 <div className="relative h-36 sm:h-40 w-full overflow-hidden bg-pink-100">
 <img
 src={item.image}
@@ -159,14 +189,14 @@ alt={item.name}
 className="h-full w-full object-cover transform transition-transform duration-500 group-hover:scale-105"
 />
 <div className="absolute inset-0 bg-gradient-to-t from-pink-900/30 via-transparent to-transparent opacity-60 pointer-events-none" />
+{item.tag && (
 <div className="absolute top-2 left-2 px-3 py-1 rounded-full bg-white/85 text-[0.65rem] font-semibold uppercase tracking-wide text-pink-600 shadow-sm">
 {item.tag}
 </div>
+)}
 </div>
 
-
 <div className="p-4 sm:p-5">
-
 <div className="flex items-start justify-between gap-3 mb-2">
 <h2 className="text-base sm:text-lg font-semibold text-pink-900">
 {item.name}
@@ -188,31 +218,39 @@ ${Number(item.price).toFixed(2)}
 {item.temperature}
 </span>
 </div>
+
 <div className="relative">
-<button onClick={(e)=>{e.preventDefault();
-    onAddtocart(item);
-    setaddeditem(item.id);setTimeout(()=> setaddeditem(null),2000);
+<button
+onClick={(e) => {
+e.preventDefault(); // so it doesn't open detail when clicking add
+onAddtocart(item);
+setaddeditem(item.id);
+setTimeout(() => setaddeditem(null), 2000);
 }}
-className="mt-4 w-full rounded-full bg-pink-500 text-white text-xs sm:text-sm font-semibold py-2 shadow-md shadow-pink-200 hover:bg-pink-600 active:scale-95 transition-all duration-200">
+className="mt-4 w-full rounded-full bg-pink-500 text-white text-xs sm:text-sm font-semibold py-2 shadow-md shadow-pink-200 hover:bg-pink-600 active:scale-95 transition-all duration-200"
+>
 Add to plate
 </button>
+
 {addeditem === item.id && (
-    <span className="absolute top-0 right-0 transform -translate-y-full bg-amber-400 text-pink-700 px-2 py-1 rounded-full text-xs font-semibold shadow-md">added to cart!</span>
+<span className="absolute top-0 right-0 transform -translate-y-full bg-amber-400 text-pink-700 px-2 py-1 rounded-full text-xs font-semibold shadow-md">
+added to cart!
+</span>
 )}
 </div>
 </div>
 </article>
 </Link>
-    )
+))}
+</div>
 )}
-    </div>
-
 </section>
 </div>
 </main>
-<FloatingCart cartitems={cartitems}></FloatingCart>
-</>
 
-    );
+<FloatingCart cartitems={cartitems} />
+</>
+);
 }
+
 export default Menu;
