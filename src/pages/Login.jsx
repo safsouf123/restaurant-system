@@ -7,38 +7,38 @@ const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [msg, setMsg] = useState("");
 
-function handleLogin(e) {
-  e.preventDefault();
-  setMsg("");
+async function handleLogin(e) {
+e.preventDefault();
+setMsg("");
 
-  const API_URL = process.env.REACT_APP_API_URL;
+try {
+const res = await fetch(
+"https://restaurant-system-production-2f66.up.railway.app/api/auth/login",
+{
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ email, password }),
+}
+);
 
- fetch("https://restaurant-system-production-2f66.up.railway.app/api/menu"), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  }
-    .then((res) =>
-      res.json().then((data) => ({ ok: res.ok, data }))
-    )
-    .then(({ ok, data }) => {
-      if (!ok) {
-        setMsg(data.message || "Login failed");
-        return;
-      }
+const data = await res.json();
 
-      setUser({
-        id: data.userId,
-        name: data.name,
-        role: data.role
-      });
-
-      navigate("/menu");
-    })
-    .catch(() => setMsg("Server error, try again."));
+if (!res.ok) {
+setMsg(data.message || "Login failed");
+return;
 }
 
+setUser({
+id: data.userId,
+name: data.name,
+role: data.role,
+});
 
+navigate("/menu");
+} catch (err) {
+setMsg("Server error, try again.");
+}
+}
 
 return (
 <main className="min-h-screen flex items-center justify-center px-6 py-10 bg-gradient-to-b from-pink-50 to-white">
@@ -48,9 +48,7 @@ return (
 <h1 className="text-2xl sm:text-3xl font-extrabold text-pink-800 mb-1">
 Login
 </h1>
-<p className="text-pink-500 text-sm mb-5">
-Welcome back to Bake-Era 💖
-</p>
+<p className="text-pink-500 text-sm mb-5">Welcome back to Bake-Era 💖</p>
 
 {msg && (
 <div className="mb-4 p-3 rounded-2xl bg-amber-100 text-amber-900 text-sm border border-amber-200">
