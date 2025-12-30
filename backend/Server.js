@@ -1,23 +1,33 @@
+require("dotenv").config();
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-host: process.env.MYSQLHOST || "localhost",
-user: process.env.MYSQLUSER || "root",
-password: process.env.MYSQLPASSWORD || "",
-database: process.env.MYSQLDATABASE || "bakery_db",
-port: process.env.MYSQLPORT ? Number(process.env.MYSQLPORT) : 3306,
+host: process.env.DB_HOST || "localhost",
+user: process.env.DB_USER || "root",
+password: process.env.DB_PASSWORD || "",
+database: process.env.DB_NAME || "bakery_db",
+port: Number(
+    process.env.DB_PORT ||
+    3306
+  ),
 });
 
 db.connect((err) => {
-if (err) return console.error(err);
-console.log("Database connected successfully");
+  if (err) {
+    console.error("Database connection failed:", err);
+    process.exit(1);
+  }
+  console.log("Database connected successfully");
 });
+
 
 app.get("/", (req, res) => res.send("ok"));
 
