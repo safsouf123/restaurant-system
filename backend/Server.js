@@ -127,7 +127,70 @@ if (err) return res.status(500).json(err);
 res.json(results);
 });
 });
+app.delete("/api/admin/orders/:id", isAdmin, (req, res) => {
+db.query("DELETE FROM orders WHERE id = ?", [req.params.id], (err) => {
+if (err) return res.status(500).json(err);
+res.json({ message: "Order deleted" });
+});
+});
 
 
+app.put("/api/admin/orders/:id/status", isAdmin, (req, res) => {
+const { status } = req.body;
+db.query(
+"UPDATE orders SET status = ? WHERE id = ?",
+[status, req.params.id],
+(err) => {
+if (err) return res.status(500).json(err);
+res.json({ message: "Status updated" });
+}
+);
+}); 
+
+app.post("/api/contact", (req, res) => {
+const { name, email, subject, message } = req.body;
+
+if (!name || !email || !message) {
+return res.status(400).json({ message: "Name, email, and message are required." });
+}
+
+db.query(
+"INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)",
+[name, email, subject || "", message],
+(err, result) => {
+if (err) return res.status(500).json(err);
+res.status(201).json({ message: "Message sent ✅", id: result.insertId });
+}
+);
+});
+
+app.get("/api/admin/messages", isAdmin, (req, res) => {
+db.query("SELECT * FROM contact_messages ORDER BY created_at DESC", (err, results) => {
+if (err) return res.status(500).json(err);
+res.json(results);
+});
+});
+app.get("/api/admin/users-with-orders", isAdmin, (req, res) => {
+const sql = `
+SELECT
+u.id AS user_id,
+u.name AS user_name,
+u.email AS user_email,
+u.role AS user_role,
+o.id AS order_id,
+o.item_name,
+o.quantity,
+o.price,
+o.status
+FROM users u
+LEFT JOIN orders o ON o.user_id = u.id
+ORDER BY u.id DESC, o.id DESC
+`;
+
+db.query(sql, (err, results) => {
+if (err) return res.status(500).json(err);
+res.json(results);
+});
+});
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
