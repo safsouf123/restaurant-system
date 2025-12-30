@@ -1,49 +1,42 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const API = "https://restaurant-system-production-2f66.up.railway.app";
+
 export default function Admin({ user }) {
 const [usersWithOrders, setUsersWithOrders] = useState([]);
 const [orders, setOrders] = useState([]);
 const [msg, setMsg] = useState("");
 
-const isAdmin = user?.role?.trim().toLowerCase() === "admin";
-
+const isAdmin = (user?.role || "").trim().toLowerCase() === "admin";
 
 async function handleDelete(orderId) {
 try {
-await fetch(
-`http://localhost:5000/api/admin/orders/${orderId}?userId=${user.id}`,
-{ method: "DELETE" }
-);
+await fetch(`${API}/api/admin/orders/${orderId}?userId=${user.id}`, {
+method: "DELETE",
+});
 
 setOrders((prev) => prev.filter((x) => x.id !== orderId));
-
-
 setUsersWithOrders((prev) => prev.filter((row) => row.order_id !== orderId));
 
 setMsg("Order deleted ✅");
 setTimeout(() => setMsg(""), 2000);
-} catch (e) {
+} catch {
 setMsg("Could not delete order.");
 }
 }
 
 async function handleStatus(orderId, newStatus) {
 try {
-await fetch(
-`http://localhost:5000/api/admin/orders/${orderId}/status?userId=${user.id}`,
-{
+await fetch(`${API}/api/admin/orders/${orderId}/status?userId=${user.id}`, {
 method: "PUT",
 headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ status: newStatus })
-}
-);
-
+body: JSON.stringify({ status: newStatus }),
+});
 
 setOrders((prev) =>
 prev.map((x) => (x.id === orderId ? { ...x, status: newStatus } : x))
 );
-
 
 setUsersWithOrders((prev) =>
 prev.map((row) =>
@@ -53,11 +46,10 @@ row.order_id === orderId ? { ...row, status: newStatus } : row
 
 setMsg("Order updated ✅");
 setTimeout(() => setMsg(""), 2000);
-} catch (e) {
+} catch {
 setMsg("Could not update status.");
 }
 }
-
 
 useEffect(() => {
 setMsg("");
@@ -65,19 +57,16 @@ setMsg("");
 if (!user?.id) return;
 if (!isAdmin) return;
 
-
-fetch(`http://localhost:5000/api/admin/users-with-orders?userId=${user.id}`)
+fetch(`${API}/api/admin/users-with-orders?userId=${user.id}`)
 .then((res) => res.json())
 .then((data) => setUsersWithOrders(Array.isArray(data) ? data : []))
 .catch(() => setMsg("Could not load users with orders."));
 
-
-fetch(`http://localhost:5000/api/admin/orders?userId=${user.id}`)
+fetch(`${API}/api/admin/orders?userId=${user.id}`)
 .then((res) => res.json())
 .then((data) => setOrders(Array.isArray(data) ? data : []))
 .catch(() => setMsg("Could not load orders."));
-}, [user, isAdmin]);
-
+}, [user?.id, isAdmin]);
 
 const grouped = usersWithOrders.reduce((acc, row) => {
 if (!row.user_id) return acc;
@@ -88,7 +77,7 @@ id: row.user_id,
 name: row.user_name,
 email: row.user_email,
 role: row.user_role,
-orders: []
+orders: [],
 };
 }
 
@@ -98,7 +87,7 @@ id: row.order_id,
 item_name: row.item_name,
 quantity: row.quantity,
 price: row.price,
-status: row.status
+status: row.status,
 });
 }
 
@@ -106,7 +95,6 @@ return acc;
 }, {});
 
 const groupedUsers = Object.values(grouped);
-
 
 if (!user?.id) {
 return (
@@ -149,7 +137,6 @@ Logged in as: <span className="font-semibold">{user.name}</span> (admin)
 )}
 
 <div className="grid gap-6 lg:grid-cols-2">
-
 <div className="bg-white/70 border border-pink-100 rounded-2xl p-4">
 <h2 className="font-bold text-pink-700 mb-3">Users & Their Orders</h2>
 
@@ -208,7 +195,6 @@ ${Number(o.price).toFixed(2)}
 </ul>
 )}
 </div>
-
 
 <div className="bg-white/70 border border-pink-100 rounded-2xl p-4">
 <h2 className="font-bold text-pink-700 mb-3">Manage Orders</h2>

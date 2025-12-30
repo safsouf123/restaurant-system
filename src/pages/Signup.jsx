@@ -1,33 +1,35 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+const API = "https://restaurant-system-production-2f66.up.railway.app";
+
 export default function Signup() {
 const navigate = useNavigate();
+
 const [name, setName] = useState("");
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
+
 const [msg, setMsg] = useState("");
 
 function handleSignup(e) {
 e.preventDefault();
 setMsg("");
 
-fetch("http://localhost:5000/api/auth/signup", {
+fetch(`${API}/api/auth/signup`, {
 method: "POST",
 headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ name, email, password })
+body: JSON.stringify({ name, email, password }),
 })
-.then((res) =>
-res.json().then((data) => ({ ok: res.ok, data }))
-)
+.then((res) => res.json().then((data) => ({ ok: res.ok, data })))
 .then(({ ok, data }) => {
 if (!ok) {
 setMsg(data.message || "Signup failed");
 return;
 }
 
-// go to login after successful signup
-navigate("/login");
+setMsg("Account created ✅ Redirecting to login...");
+setTimeout(() => navigate("/login"), 900);
 })
 .catch(() => setMsg("Server error, try again."));
 }
