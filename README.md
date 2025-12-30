@@ -1,156 +1,220 @@
-
-
 # BAKE-ERA 🍞🥐
+**Full-Stack Bakery Ordering System**
 
-A beautiful, responsive bakery web app built with React. Users can browse the menu, view details of dishes, add items to their cart, and contact the bakery. The app emphasizes smooth UI, cozy animations, and a modern, warm design.
+BAKE-ERA is a full-stack web application for a bakery that allows users to browse a menu, place orders, and contact the bakery. It includes user authentication, order management, and an admin panel built with **React, Node.js, Express, and MySQL**.
 
 ---
 
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
-- [Demo](#demo)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Technologies Used](#technologies-used)
+- [Tech Stack](#tech-stack)
+- [User Roles](#user-roles)
+- [Database Design](#database-design)
+- [Installation & Setup](#installation--setup)
+- [API Endpoints](#api-endpoints)
+- [Screenshots](#screenshots)
+- [Deployment](#deployment)
+- [Future Improvements](#future-improvements)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 
 ## Overview
-BAKE-ERA is a front-end React project simulating a bakery experience online. Users can:
-- View the homepage with animated branding and background elements
-- Explore the About page with the bakery's story
-- Browse the menu, filter items by meal type and temperature, and view detailed dish pages
-- Add items to the cart and see the total price update in real-time
-- Submit messages via a contact form
-- Explore orders (placeholder page)
+
+BAKE-ERA simulates a real bakery ordering system.
+Users can sign up, log in, browse menu items, add items to a cart, and place orders.
+Admins can view and manage all user orders.
+
+This project was developed for **CSCI426 – Advanced Web Programming (Project Phase 2)**.
 
 ---
 
 ## Features
-- Fully responsive design using Tailwind CSS
-- Dynamic routing with React Router
-- State management via `useState` for cart and form interactions
-- Smooth transitions and hover animations on UI elements
-- Menu filtering by meal type (breakfast, savory, dessert, drinks) and temperature (hot/cold)
-- Detailed dish pages with add-to-cart functionality
-- Contact form with success notification animation
 
----
-## Screenshots
+### User Features
+- User signup & login
+- Browse bakery menu (fetched from database)
+- View dish details
+- Add items to cart
+- Place orders
+- View personal orders
+- Contact bakery via contact form
 
-### Homepage
-![homepage](src/assets/home.jpeg)
-
-### Menu Page
-![menu](src/assets/menu.jpeg)
-
-### Dish Detail
-![dishdetail](src/assets/dishdetail.jpeg)
-
-### Cart Page
-![cart](src/assets/cart.jpeg)
-
-### Contact Page
-![alt text](src/assets/contact.jpeg)
-
-
-## Demo
-
-Here are some animated GIFs showing the app in action (replace these with your actual GIFs):
-
-**Homepage Animations**
-![Homepage Animation](./assets/homepage-animation.gif)
-
-**Menu Page with Filters**
-![Menu Filters](./assets/menu-filters.gif)
-
-**Dish Detail & Add to Cart**
-![Dish Detail](./assets/dish-detail.gif)
-
-**Cart Page Overview**
-![Cart Page](./assets/cart-page.gif)
-
-**Contact Form Submission (Optional)**
-![Contact Form](./assets/contact-form.gif)
-
-> Tip: Record these using LICEcap, ShareX, or ScreenToGif. Optimize GIFs for small file size to avoid slowing down the README.
+### Admin Features
+- Admin login
+- View all orders from all users
+- See which user placed which order
+- Update order status (Pending → Completed)
+- Delete orders
 
 ---
 
-## Installation
-1. Clone the repository:
+## Tech Stack
+
+### Frontend
+- React
+- React Router DOM
+- Tailwind CSS
+- Material UI Icons
+
+### Backend
+- Node.js
+- Express.js
+- MySQL (MariaDB via XAMPP)
+- CORS
+
+### Tools
+- Git & GitHub
+- Postman (API testing)
+- XAMPP (MySQL server)
+
+---
+
+## User Roles
+
+| Role | Permissions |
+|------|------------|
+| User | Browse menu, place orders, view own orders |
+| Admin | View all orders, manage order status, delete orders |
+
+Admin access is determined by the `role` field in the `users` table.
+
+---
+
+## Database Design
+
+### Tables
+- **users**
+- id
+- name
+- email
+- password
+- role (`user` / `admin`)
+
+- **menu**
+- id
+- name
+- description
+- price
+- category
+- temperature
+
+- **orders**
+- id
+- user_id (FK → users.id)
+- item_name
+- quantity
+- price
+- status
+
+- **contact_messages**
+- id
+- name
+- email
+- subject
+- message
+- created_at
+
+---
+
+## Installation & Setup
+
+### 1. Clone the repository
 ```bash
-git clone https://github.com/safsuf123/restaurant-system.git
-
-2-Navigate to the project folder: 
-
+git clone https://github.com/safsuf123/restaurant-system.git 
 cd restaurant-system
-Install dependencies:
 
+ 
+
+Front-end setup 
 npm install
-
-Start the development server:
-
 npm start
+Frontend runs on:
 
-Open http://localhost:3000Attachment.png in your browser.
+http://localhost:3000
 
+ 
+Backend setup 
+cd backend
+npm install
+node server.js
+Backend runs on:
 
-Usage
-Navigate the site using the top navbar.
+http://localhost:5000
 
-Click on Menu to browse items.
+4. Database Setup
+Start MySQL (MariaDB) using XAMPP
 
-Click an item to see details and add to the cart.
+Create database:
 
-Check your cart at any time using the Cart page.
+CREATE DATABASE bakery_db;
+Import provided SQL schema (tables + sample data)
 
-Submit messages via the Contact page.
-
-
-
-Folder Structure
-/src
-/components
-Main.jsx
-Navbar.jsx
-Tryout.jsx
-/pages
-About.jsx
-Home.jsx
-Menu.jsx
-Cart.jsx
-Dishdetail.jsx
-Orders.jsx
-Contact.jsx
-App.jsx
-index.js 
+ 
+API Endpoints (Examples)
 
 
-Technologies Used
-React
+Auth
+POST /api/auth/signup
 
-React Router DOM
-
-Tailwind CSS
-
-Material UI Icons
+POST /api/auth/login
 
 
 
+Menu
+GET /api/menu
+
+GET /api/menu/:id
+
+
+
+Orders
+POST /api/orders
+
+GET /api/orders/:userId
+
+
+
+Admin
+GET /api/admin/orders
+
+PUT /api/admin/orders/:id/status
+
+DELETE /api/admin/orders/:id
+
+ 
+Deployment
+Frontend: GitHub Pages / Netlify
+
+Backend: Render / Railway
+
+Database: Railway / PlanetScale (MySQL-compatible)
+
+
+
+Deployment was done after completing backend functionality and testing locally.
+
+ 
+Future Improvements
+Password hashing (bcrypt)
+
+JWT authentication
+
+Email notifications
+
+Payment integration
+
+Admin dashboard analytics
+
+Improved UI for admin panel
+
+ 
 Contributing
 
 
-Contributions are welcome! Please fork the repo and create a pull request.
+Contributions are welcome.
 
-
-
-
-
-
+Please fork the repository and submit a pull request.
 
 
