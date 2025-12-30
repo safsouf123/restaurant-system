@@ -8,33 +8,36 @@ const [password, setPassword] = useState("");
 const [msg, setMsg] = useState("");
 
 function handleLogin(e) {
-e.preventDefault();
-setMsg("");
+  e.preventDefault();
+  setMsg("");
 
-fetch("http://localhost:5000/api/auth/login", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ email, password })
-})
-.then((res) =>
-res.json().then((data) => ({ ok: res.ok, data }))
-)
-.then(({ ok, data }) => {
-if (!ok) {
-setMsg(data.message || "Login failed");
-return;
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  fetch(`${API_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  })
+    .then((res) =>
+      res.json().then((data) => ({ ok: res.ok, data }))
+    )
+    .then(({ ok, data }) => {
+      if (!ok) {
+        setMsg(data.message || "Login failed");
+        return;
+      }
+
+      setUser({
+        id: data.userId,
+        name: data.name,
+        role: data.role
+      });
+
+      navigate("/menu");
+    })
+    .catch(() => setMsg("Server error, try again."));
 }
 
-setUser({
-id: data.userId,
-name: data.name,
-role: data.role
-});
-
-navigate("/menu");
-})
-.catch(() => setMsg("Server error, try again."));
-}
 
 return (
 <main className="min-h-screen flex items-center justify-center px-6 py-10 bg-gradient-to-b from-pink-50 to-white">
