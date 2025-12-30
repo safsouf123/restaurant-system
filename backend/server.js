@@ -1,3 +1,4 @@
+// Deployment fix: force redeploy on Railway
 require("dotenv").config();
 
 const express = require("express");
