@@ -10,7 +10,7 @@ const [addeditem, setaddeditem] = useState(null);
 const [msg, setMsg] = useState("");
 
 useEffect(() => {
-fetch("http://localhost:5000/api/menu")
+fetch("https://restaurant-system-production-2f66.up.railway.app/api/menu")
 .then((res) => res.json())
 .then((data) => {
 // If backend returns something unexpected, avoid crashing

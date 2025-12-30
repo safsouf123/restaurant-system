@@ -13,11 +13,11 @@ function handleLogin(e) {
 
   const API_URL = process.env.REACT_APP_API_URL;
 
-  fetch(`${API_URL}/api/auth/login`, {
+ fetch("https://restaurant-system-production-2f66.up.railway.app/api/menu"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
-  })
+  }
     .then((res) =>
       res.json().then((data) => ({ ok: res.ok, data }))
     )

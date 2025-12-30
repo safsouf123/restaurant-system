@@ -10,7 +10,7 @@ useEffect(() => {
 setItem(null);
 setMsg("");
 
-fetch(`http://localhost:5000/api/menu/${id}`)
+fetch("https://restaurant-system-production-2f66.up.railway.app/api/menu")
 .then((res) =>
 res.json().then((data) => ({ ok: res.ok, data }))
 )

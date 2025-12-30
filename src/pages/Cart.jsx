@@ -23,7 +23,7 @@ const userId = user.id;
 
 try {
 for (const item of cartitems) {
-await fetch("http://localhost:5000/api/orders", {
+await fetch("https://restaurant-system-production-2f66.up.railway.app/api/orders", {
 method: "POST",
 headers: { "Content-Type": "application/json" },
 body: JSON.stringify({
