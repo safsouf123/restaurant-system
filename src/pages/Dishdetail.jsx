@@ -10,10 +10,8 @@ useEffect(() => {
 setItem(null);
 setMsg("");
 
-fetch("https://restaurant-system-production-2f66.up.railway.app/api/menu")
-.then((res) =>
-res.json().then((data) => ({ ok: res.ok, data }))
-)
+fetch(`https://restaurant-system-production-2f66.up.railway.app/api/menu/${id}`)
+.then((res) => res.json().then((data) => ({ ok: res.ok, data })))
 .then(({ ok, data }) => {
 if (!ok) {
 setMsg(data.message || "Item not found");
@@ -43,15 +41,24 @@ Back to Menu
 
 if (!item) return <p className="p-6 text-pink-700">Loading...</p>;
 
+// Safe price handling (prevents NaN)
+const price = Number(item.price);
+const priceText = Number.isFinite(price) ? price.toFixed(2) : "0.00";
+
 return (
 <main className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/60 to-amber-50/50 px-4 sm:px-6 lg:px-8 py-8">
 <div className="max-w-3xl mx-auto">
 <section className="bg-white/80 backdrop-blur-md border border-pink-100 rounded-3xl shadow-xl shadow-pink-100/60 overflow-hidden">
 <div className="h-64 bg-pink-100">
 <img
-src={item.image}
-alt={item.name}
+src={item.image || ""}
+alt={item.name || "Dish"}
 className="w-full h-full object-cover"
+onError={(e) => {
+// fallback image if your DB has missing/broken image links
+e.currentTarget.src =
+"https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=1200&q=60";
+}}
 />
 </div>
 
@@ -66,21 +73,25 @@ Dish Detail
 </h1>
 
 <span className="text-lg sm:text-xl font-extrabold text-pink-600">
-${Number(item.price).toFixed(2)}
+${priceText}
 </span>
 </div>
 
 <p className="mt-3 text-pink-900/80">
-{item.description}
+{item.description || "No description available."}
 </p>
 
 <div className="mt-4 flex flex-wrap gap-2 text-[0.65rem] uppercase tracking-[0.16em]">
+{item.meal && (
 <span className="px-2 py-1 rounded-full bg-pink-50 text-pink-600 border border-pink-100">
 {item.meal}
 </span>
+)}
+{item.temperature && (
 <span className="px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
 {item.temperature}
 </span>
+)}
 {item.tag && (
 <span className="px-2 py-1 rounded-full bg-white text-pink-600 border border-pink-100">
 {item.tag}
